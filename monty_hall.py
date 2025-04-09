@@ -1,18 +1,30 @@
-import random 
+from random import randint, choice
 
-number_doors =  3
-door_with_prize = random.randint(1,3)
+def random_door():
+    return randint(1,3)
 
-chosen_door = int(input(f'there are {number_doors} doors, pick one: \n'))
-opened_door = random.choice([i for i in range(1,4) if i != chosen_door and i != door_with_prize])
+trial_count = 10000
 
-switch = input("You chose door {0}, but door {1} was opened. \n Doy you want to switch y/n?\n".format(chosen_door, opened_door))
+stay_wins = 0
+switch_wins = 0
 
-if switch == 'y':
-    opened_door = random.choice(
-        [i for i in range(1,4) if i != chosen_door and i != door_with_prize]
-    )
-    if chosen_door == door_with_prize:
-        print("You win a prize!")
-    else: 
-        print("sorry no prize")
+for i in range(0, trial_count):
+    prize_door = random_door()
+    selected_door = random_door()
+    opened_door = choice([
+        d for d in range(1,4) 
+        if d != selected_door
+    ])
+    switch_door = choice([
+        d for d in range(1,4)
+        if d != selected_door and d != opened_door 
+    ])
+if selected_door == prize_door: 
+    stay_wins += 1
+if switch_door == prize_door: 
+    switch_wins += 1
+
+print("STAY WINS: {}\n Switch win: {}".format(stay_wins, switch_wins))
+print("STAY WIN RATE: {}, SWICH WIN RATE:{}".format(
+    float(stay_wins)/float(trial_count),
+    float(switch_wins)/float(trial_count)))
